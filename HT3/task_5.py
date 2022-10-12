@@ -2,4 +2,11 @@
 values duplicates from dictionary.
 Feel free to hardcode your dictionary."""
 
-dict_1 = {1: 'bar', 2: 'buz', 3: 'bar', 4: 'bar'}
+d = {1: 'bar', 2: 'bar', 3: 'bur', 4: 'bar'}
+result = {}
+
+for k, v in d.items():
+    if v not in result.values():
+        result.update({k: v})
+
+print(result)

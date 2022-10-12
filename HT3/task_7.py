@@ -7,7 +7,5 @@ try:
 except ValueError:
     print("The entered value is not a number")
 else:
-    dict_num = dict()
-    for key in range(num + 1):
-        dict_num.update({key: key * key})
+    dict_num = {a: a ** 2 for a in range(num+1)}
     print(dict_num)

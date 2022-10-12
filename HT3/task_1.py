@@ -7,6 +7,8 @@ The number of elements in the tuples must be different."""
 value = input("Enter value: ")
 
 list_tuple = [(1, 2), (1, 2, 3), (1,)]
+
 for i in range(len(list_tuple)):
     list_tuple[i] = list_tuple[i][:-1] + (value,)
+
 print(list_tuple)
