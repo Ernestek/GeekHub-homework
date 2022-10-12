@@ -8,6 +8,3 @@ numbers = input()
 n_list = numbers.split(', ')
 n_tuple = tuple(n_list)
 print(n_tuple, n_list)
-
-
-
