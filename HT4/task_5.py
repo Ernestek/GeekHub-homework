@@ -8,7 +8,12 @@
 
 
 def calculator(x, operation, y):
-    if x.isdigit() and y.isdigit():
+    try:
+        x = float(x)
+        y = float(y)
+    except ValueError:
+        return 'Некоректне значення'
+    else:
         if operation == '+':
             return x + y
         elif operation == '-':
@@ -34,8 +39,6 @@ def calculator(x, operation, y):
             return x ** y
         else:
             return 'Неможлива операція'
-    else:
-        return "Некоректні значення"
 
 
 exam = input('Enter example: ').split()
