@@ -9,17 +9,23 @@
     x < y;       вiдповiдь - "у бiльше нiж х на z"
     x == y.      відповідь - "х дорівнює y" """
 
-num1 = int(input('Enter number x: '))
-num2 = int(input('Enter number y: '))
-
 
 def compare(x, y):
-    if x > y:
-        print(f"х бiльше нiж у на {x - y}")
-    elif x < y:
-        print(f"у бiльше нiж х на {y - x}")
+    try:
+        x = int(x)
+        y = int(y)
+    except ValueError:
+        print("Введено некоректне значення")
     else:
-        print("х дорівнює y")
+        if x > y:
+            print(f"х бiльше нiж у на {x - y}")
+        elif x < y:
+            print(f"у бiльше нiж х на {y - x}")
+        else:
+            print("х дорівнює y")
 
+
+num1 = input('Enter number x: ')
+num2 = input('Enter number y: ')
 
 compare(num1, num2)
