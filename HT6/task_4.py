@@ -16,7 +16,7 @@
 
 
 def morse_code(string):
-    MORSE_CODE_DICT = {'.-': 'A', '-...': 'B', '-.-.': 'C',
+    morse_code_dict = {'.-': 'A', '-...': 'B', '-.-.': 'C',
                        '-..': 'D', '.': 'E', '..-.': 'F',
                        '--.': 'G', '....': 'H', '..': 'I',
                        '.---': 'J', '-.-': 'K', '.-..': 'L',
@@ -30,11 +30,15 @@ def morse_code(string):
     string = string.split(' ')
     message = []
     for code in string:
-        message.append(MORSE_CODE_DICT[code])
-
+        try:
+            message.append(morse_code_dict[code])
+        except KeyError:
+            """Неизвестное значене будет отмечено / с обеих сторон"""
+            message.append('/' + code + '/')
     result = ' '.join(''.join(message).split('  '))
     return result
 
 
+print(morse_code('--. .1 . -.- .... ..-- -...   .. ...   .... . .-. .'))
 print(morse_code('--. . . -.- .... ..-- -...   .. ...   .... . .-. .'))
 print(morse_code('...---...'))
