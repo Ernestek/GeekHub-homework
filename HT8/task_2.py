@@ -12,18 +12,27 @@
 
 def first_center_end(name, amount):
     try:
+        if amount < 0:
+            print('Число не може бути від\'ємним ')
+            return
+    except TypeError:
+        print('Некоректні дані')
+        return
+
+    try:
         with open(name, 'r') as file:
             f = file.read()
             if len(f) < amount or len(f) - amount == 1:
                 print('Занадто мало символів у файлі')
                 return
-            center = int(len(f)/2)-int(amount/2)
-            b1 = f[0:amount]
-            b2 = f[center:center+amount]
-            b3 = f[-amount:]
-            print([b1, b2, b3])
     except FileNotFoundError:
         print('No such file')
+    else:
+        center = int(len(f) / 2) - int(amount / 2)
+        b1 = f[0:amount]
+        b2 = f[center:center + amount]
+        b3 = f[-amount:]
+        print([b1, b2, b3])
 
 
-first_center_end('file.txt', 23)
+first_center_end('file.txt', 2)
