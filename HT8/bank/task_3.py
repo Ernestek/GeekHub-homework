@@ -26,6 +26,10 @@ def take_money(name, amount):
         print('Введено некоректне значення')
         return start(name)
 
+    if amount < 0:
+        print('Некоректне значення')
+        return start(name)
+
     with open(f'balance/{name}_balance.txt', 'r') as file:
         balance = float(file.read())
         if balance < amount:
@@ -50,6 +54,10 @@ def put_money(name, amount):
         amount = float(amount)
     except ValueError:
         print('Введено некоректне значення')
+        return start(name)
+
+    if amount < 0:
+        print('Некоректне значення')
         return start(name)
 
     with open(f'balance/{name}_balance.txt', 'r') as file:
