@@ -264,7 +264,7 @@ def admin_menu(name):
         return input_menu()
     else:
         print('Введено некоректне значення')
-        return start(name)
+        return admin_menu(name)
 
 
 def start(name):
