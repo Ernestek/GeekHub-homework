@@ -214,16 +214,16 @@ def put_bill_admin():
         return admin_menu('admin')
     if bill not in num:
         print('Невідома купюра')
-        return take_bill_admin()
+        return put_bill_admin()
     try:
         amount = int(input('Введіть кількість: '))
     except ValueError:
         print('Некоректні дані')
-        return take_bill_admin()
+        return put_bill_admin()
     else:
         if amount < 0:
             print('Некоректні дані')
-            return take_bill_admin()
+            return put_bill_admin()
 
         cursor.execute("UPDATE ATM SET amount = amount + (?) WHERE name = (?)",
                        (amount, bill))
