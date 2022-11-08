@@ -176,20 +176,26 @@ def atm_balance():
 
 def take_bill_admin():
     num = ('10', '20', '50', '100', '200', '500', '1000')
-    bill = input('Введіть номінал: ')
+    bill = input('0. Назад\n'
+                 'Введіть номінал: ')
+    if bill == '0':
+        return admin_menu('admin')
     if bill not in num:
         print('Невідома купюра')
         return take_bill_admin()
     try:
         amount = int(input('Введіть кількість: '))
-    except TypeError:
+    except ValueError:
         print('Некоректні дані')
         return take_bill_admin()
     else:
         if amount < 0:
             print('Некоректні дані')
             return take_bill_admin()
-
+        bank_amount_bill = cursor.execute("SELECT amount FROM ATM WHERE name = (?)", (bill,)).fetchone()
+        if amount > bank_amount_bill[0]:
+            print(f'Недостатньо купюр, наявна кількість: {bank_amount_bill[0]}')
+            return take_bill_admin()
         cursor.execute("UPDATE ATM SET amount = amount - (?) WHERE name = (?)",
                        (amount, bill))
         now = datetime.datetime.now().strftime("%Y-%m-%d %H.%M")
@@ -202,13 +208,16 @@ def take_bill_admin():
 
 def put_bill_admin():
     num = ('10', '20', '50', '100', '200', '500', '1000')
-    bill = input('Введіть номінал: ')
+    bill = input('0. Назад\n'
+                 'Введіть номінал: ')
+    if bill == '0':
+        return admin_menu('admin')
     if bill not in num:
         print('Невідома купюра')
         return take_bill_admin()
     try:
         amount = int(input('Введіть кількість: '))
-    except TypeError:
+    except ValueError:
         print('Некоректні дані')
         return take_bill_admin()
     else:
