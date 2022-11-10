@@ -19,7 +19,7 @@ conn.commit()
 
 conn.execute('''CREATE TABLE IF NOT EXISTS ATM
         (ID     PRIMARY KEY      NOT NULL,
-        NAME         TEXT        NOT NULL,
+        NAME         INT        NOT NULL,
         AMOUNT       INT DEFAULT 0);''')
 conn.commit()
 
@@ -367,7 +367,7 @@ def admin_menu(name):
             check_transactions(name)
             continue
         elif move == '6':
-            name = input('Введіть логін корустувача')
+            name = input('Введіть логін корустувача: ')
             if check_user(name):
                 check_transactions(name)
             else:
