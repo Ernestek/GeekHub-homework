@@ -28,13 +28,14 @@ def take_bill(arr):
     for i in arr:
         amount = i[1]
         name = str(i[0])
-        cursor.execute("UPDATE ATM SET AMOUNT = AMOUNT - (?) WHERE NAME = (?)", (amount, name))
+        cursor.execute("UPDATE ATM SET AMOUNT = AMOUNT - (?) WHERE NAME = (?)",
+                       (amount, name))
         conn.commit()
 
 
-def calculate_sum_bill(amount, bill_list=None):
-    bill_list = cursor.execute("SELECT name, amount FROM ATM").fetchall()
-    bill_list = list(reversed(bill_list))
+def calculate_sum_bill(amount, bill_list):
+    bill_list.sort(reverse=True)
+
     if len(bill_list) < 1:
         return
     start_sum = amount
@@ -101,8 +102,6 @@ def check_user(name):
     for user in list_users:
         if name == user[0]:
             return True
-            print('This name is already used')
-            continue
 
 
 def registration():
@@ -115,12 +114,6 @@ def registration():
         cursor.execute("SELECT id FROM USERS ORDER BY id DESC ")
         id_sel = cursor.fetchone()[0] + 1
 
-        list_users = cursor.execute("SELECT NAME FROM USERS").fetchall()
-
-        # for user in list_users:
-        #     if name == user[0]:
-        #         print('This name is already used')
-        #         continue
         if check_user(name):
             print('This name is already used')
             continue
@@ -130,7 +123,8 @@ def registration():
             password = input('Come up with a password: ')
             if not validation_password(password):
                 continue
-            cursor.execute("INSERT INTO USERS (id,NAME,PASSWORD) VALUES ((?), (?), (?))", (id_sel, name, password))
+            cursor.execute("INSERT INTO USERS (id,NAME,PASSWORD) VALUES ((?), (?), (?))",
+                           (id_sel, name, password))
             conn.commit()
             print(f'Вітання, {name}, ')
             user_menu(name)
@@ -216,13 +210,13 @@ def take_money(name, amount):
             break
         change = amount % 10
         amount -= change
-        check = calculate_sum_bill(int(amount))
+        bill_list = cursor.execute("SELECT name, amount FROM ATM").fetchall()
+        check = calculate_sum_bill(int(amount), bill_list)
         if check is None:
             print('Неполиво зняти таку сумму')
             break
         print(check)
         take_bill(check)
-
 
         print(f'Знято {int(amount)}')
         cursor.execute("UPDATE USERS SET balance = balance - (?) WHERE NAME = (?)",
@@ -287,7 +281,8 @@ def take_bill_admin():
             if amount < 0:
                 print('Некоректні дані')
                 continue
-            bank_amount_bill = cursor.execute("SELECT amount FROM ATM WHERE name = (?)", (bill,)).fetchone()
+            bank_amount_bill = cursor.execute("SELECT amount FROM ATM WHERE name = (?)",
+                                              (bill,)).fetchone()
             if amount > bank_amount_bill[0]:
                 print(f'Недостатньо купюр, наявна кількість: {bank_amount_bill[0]}')
                 continue
