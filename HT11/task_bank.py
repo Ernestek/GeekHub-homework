@@ -25,10 +25,100 @@ conn.commit()
 
 
 class Bank:
+    name = ''
+    password = ''
+    # def __init__(self, name, password):
+    #     self.name = name
+    #     self.password = password
 
-    def __init__(self, name, password):
-        self.name = name
-        self.password = password
+    @staticmethod
+    def validation_name(name):
+        if len(name) < 3 or len(name) > 51:
+            print('name length should be >4 and <51')
+            return False
+        return True
+
+    @staticmethod
+    def validation_password(password):
+        if len(password) < 6:
+            print('the password is too short (min 6 char)')
+            return False
+        elif not any(map(str.isdigit, password)):
+            print('password must have at least one digit')
+            return False
+        elif not any(map(str.isalpha, password)):
+            print('password must have at least one alpha')
+            return False
+        elif any(map(str.isspace, password)):
+            print('password must not have spaces')
+            return False
+        return True
+
+    @staticmethod
+    def check_user(name):
+        list_users = cursor.execute("SELECT NAME FROM USERS").fetchall()
+        for user in list_users:
+            if name == user[0]:
+                return True
+
+    def registration(self):
+        while True:
+            name = input('0. Exit\n'
+                         'Come up with a name: ')
+            if name == '0':
+                break
+
+            cursor.execute("SELECT id FROM USERS ORDER BY id DESC ")
+            id_sel = cursor.fetchone()[0] + 1
+
+            if self.check_user(name):
+                print('This name is already used')
+                continue
+            if not self.validation_name(name):
+                continue
+            for _ in range(6):
+                password = input('Come up with a password: ')
+                if not self.validation_password(password):
+                    continue
+                cursor.execute("INSERT INTO USERS (id,NAME,PASSWORD) VALUES ((?), (?), (?))",
+                               (id_sel, name, password))
+                conn.commit()
+                print(f'Вітання, {name}, ')
+                # user = Bank(name, password)
+                self.name = name
+                self.password = password
+                self.user_menu()
+                return
+            print('Невдала спроба')
+            break
+        return
+
+    def authorization(self):
+        while True:
+            name = input('Введіть логін: ')
+            password = input('Введіть пароль: ')
+            state = False
+
+            if name == 'admin' and password == 'admin':
+                self.name = name
+                self.password = password
+                self.admin_menu()
+                return
+
+            list_name = cursor.execute("SELECT NAME, PASSWORD FROM USERS").fetchall()
+
+            for user in list_name:
+                if name == user[0] and password == user[1]:
+                    state = True
+            if state:
+                self.name = name
+                self.password = password
+                self.user_menu()
+                return
+            else:
+                print("Ім'я або пароль введено неправильно")
+                break
+        return
 
     @staticmethod
     def take_bill(arr):
@@ -101,8 +191,9 @@ class Bank:
                            (str(record), self.name))
             conn.commit()
 
-    def check_transactions(self):
-        data = cursor.execute("SELECT TRANSACTIONS FROM USERS WHERE name = (?)", (self.name,))
+    @staticmethod
+    def check_transactions(name):
+        data = cursor.execute("SELECT TRANSACTIONS FROM USERS WHERE name = (?)", (name,))
         print(data.fetchone()[0])
         input('Натисни ENTER щоб повернутись назад')
 
@@ -236,18 +327,17 @@ class Bank:
             break
         return
 
-    @staticmethod
-    def input_menu():
+    def input_menu(self):
         while True:
             move = input('1. Авторизація\n'
                          '2. Реєстрація\n'
                          '0. Вихід\n'
                          'Введіть цифру: ')
             if move == '1':
-                authorization()
+                self.authorization()
                 continue
             elif move == '2':
-                registration()
+                self.registration()
                 continue
             elif move == '0':
                 exit(0)
@@ -280,12 +370,12 @@ class Bank:
                 self.take_bill_admin()
                 continue
             elif move == '5':
-                self.check_transactions()
+                self.check_transactions(self.name)
                 continue
             elif move == '6':
                 name = input('Введіть логін корустувача: ')
-                if check_user(name):
-                    Bank(name, 0).check_transactions()
+                if self.check_user(name):
+                    self.check_transactions(name)
                 else:
                     print('Користувача не існує')
                 continue
@@ -315,7 +405,7 @@ class Bank:
                 self.take_money(amount)
                 continue
             elif move == '4':
-                self.check_transactions()
+                self.check_transactions(self.name)
                 continue
             elif move == '0':
                 return
@@ -324,114 +414,7 @@ class Bank:
                 continue
 
 
-def input_menu():
-    while True:
-        move = input('1. Авторизація\n'
-                     '2. Реєстрація\n'
-                     '0. Вихід\n'
-                     'Введіть цифру: ')
-        if move == '1':
-            authorization()
-            continue
-        elif move == '2':
-            registration()
-            continue
-        elif move == '0':
-            exit(0)
-            return
-        else:
-            print('Введено некоректне значення')
-            continue
-
-
-def validation_password(password):
-    if len(password) < 6:
-        print('the password is too short (min 6 char)')
-        return False
-    elif not any(map(str.isdigit, password)):
-        print('password must have at least one digit')
-        return False
-    elif not any(map(str.isalpha, password)):
-        print('password must have at least one alpha')
-        return False
-    elif any(map(str.isspace, password)):
-        print('password must not have spaces')
-        return False
-    return True
-
-
-def validation_name(name):
-    if len(name) < 3 or len(name) > 51:
-        print('name length should be >4 and <51')
-        return False
-    return True
-
-
-def check_user(name):
-    list_users = cursor.execute("SELECT NAME FROM USERS").fetchall()
-    for user in list_users:
-        if name == user[0]:
-            return True
-
-
-def registration():
-    while True:
-        name = input('0. Exit\n'
-                     'Come up with a name: ')
-        if name == '0':
-            break
-
-        cursor.execute("SELECT id FROM USERS ORDER BY id DESC ")
-        id_sel = cursor.fetchone()[0] + 1
-
-        if check_user(name):
-            print('This name is already used')
-            continue
-        if not validation_name(name):
-            continue
-        for _ in range(6):
-            password = input('Come up with a password: ')
-            if not validation_password(password):
-                continue
-            cursor.execute("INSERT INTO USERS (id,NAME,PASSWORD) VALUES ((?), (?), (?))",
-                           (id_sel, name, password))
-            conn.commit()
-            print(f'Вітання, {name}, ')
-            user = Bank(name, password)
-            user.user_menu()
-            return
-        print('Невдала спроба')
-        break
-    return
-
-
-def authorization():
-    while True:
-        name = input('Введіть логін: ')
-        password = input('Введіть пароль: ')
-        state = False
-
-        if name == 'admin' and password == 'admin':
-            """***********"""
-            admin = Bank(name, password)
-            admin.admin_menu()
-            return
-
-        list_name = cursor.execute("SELECT NAME, PASSWORD FROM USERS").fetchall()
-
-        for user in list_name:
-            if name == user[0] and password == user[1]:
-                state = True
-        if state:
-            user = Bank(name, password)
-            user.user_menu()
-            return
-        else:
-            print("Ім'я або пароль введено неправильно")
-            break
-    return
-
-
 if __name__ == "__main__":
-    input_menu()
+    atm = Bank()
+    atm.input_menu()
     conn.close()

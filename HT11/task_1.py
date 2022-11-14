@@ -35,31 +35,28 @@ class Calc:
 
     def addition(self, num1, num2):
         result = num1 + num2
-        self.last_result = self.result[-1]
-        self.result.append(result)
-        self.result.pop(0)
+        self.save_last_result(result)
         return result
 
     def subtraction(self, num1, num2):
         result = num1 - num2
-        self.last_result = self.result[-1]
-        self.result.append(result)
-        self.result.pop(0)
+        self.save_last_result(result)
         return result
 
     def multiplication(self, num1, num2):
         result = num1 * num2
-        self.last_result = self.result[-1]
-        self.result.append(result)
-        self.result.pop(0)
+        self.save_last_result(result)
         return result
 
     def division(self, num1, num2):
         result = num1 / num2
+        self.save_last_result(result)
+        return result
+
+    def save_last_result(self, result):
         self.last_result = self.result[-1]
         self.result.append(result)
         self.result.pop(0)
-        return result
 
 
 op1 = Calc()
