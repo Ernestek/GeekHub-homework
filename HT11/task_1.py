@@ -28,6 +28,9 @@ class Calc:
         return num1 * num2
     division(num1: int, num2: int):
         return num1 / num2
+    save_last_result(result: int):
+        A special save is performed in order to store the value
+        of the penultimate operation in last_result
     """
 
     result = [None]
@@ -54,6 +57,16 @@ class Calc:
         return result
 
     def save_last_result(self, result):
+        """
+        A special save is performed in order to store the value
+        of the penultimate operation in last_result
+
+        Parameters
+        ----------
+        result : int
+            Value to be saved
+        """
+
         self.last_result = self.result[-1]
         self.result.append(result)
         self.result.pop(0)
