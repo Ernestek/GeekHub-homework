@@ -48,10 +48,12 @@ class Transaction:
         return self._description
 
     def usd(self):
+        if self.currency == 'USD':
+            return self._amount
         return round(self._amount * self._usd_conversion_rate, 2)
 
 
-trans = Transaction(100, 'now')
+trans = Transaction(100, 'now', 'USD', 1212)
 print(trans.amount, trans.currency, trans.usd(), trans.description)
 trans = Transaction(1000, 'now', 'UAH', 1/37, 'На ЗСУ')
 print(trans.amount, trans.currency, trans.usd(), trans.description)
