@@ -24,7 +24,7 @@ class Quotes:
 
 class QuotesParser:
     BASE_URL = 'http://quotes.toscrape.com/'
-    QUOTES_OUTPUT_CSV_PATH = 'quotes.cvs'
+    QUOTES_OUTPUT_CSV_PATH = 'quotes.csv'
     QUOTES_FIELDS = [field.name for field in fields(Quotes)]
 
     def get_10_page_quotes(self) -> [Quotes]:
