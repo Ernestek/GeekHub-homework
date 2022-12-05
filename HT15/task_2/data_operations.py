@@ -49,9 +49,3 @@ class DataBaseOperation:
                                    item_data['current_price'], item_data['href'], item_data['brand'],
                                    item_data['category']))
             self.__conn.commit()
-
-
-# if __name__ == '__main__':
-#     item_id = CsvOperation
-#     for i in item_id.take_item_id('items_id.csv'):
-#         print(i)
