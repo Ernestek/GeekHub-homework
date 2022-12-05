@@ -40,7 +40,6 @@ class DataBaseOperation:
         self.__conn.commit()
 
     def save_in_db(self, item_data: dict):
-        print(item_data)
         if item_data:
             self.__connect_db()
 
@@ -52,7 +51,7 @@ class DataBaseOperation:
             self.__conn.commit()
 
 
-if __name__ == '__main__':
-    item_id = CsvOperation
-    for i in item_id.take_item_id('items_id.csv'):
-        print(i)
+# if __name__ == '__main__':
+#     item_id = CsvOperation
+#     for i in item_id.take_item_id('items_id.csv'):
+#         print(i)

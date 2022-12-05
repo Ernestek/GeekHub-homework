@@ -17,6 +17,8 @@ class RozetkaAPI:
         url = f'https://rozetka.com.ua/api/product-api/v4/goods/get-main?goodsId={item_id}'
         response = self.session.get(url=url)
         success = response.json()['success']
+        if not success:
+            print('Не знайдено товару з id: ', item_id)
         if success:
             return dict(
                 item_id=response.json()['data']['id'],
