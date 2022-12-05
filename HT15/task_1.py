@@ -71,6 +71,7 @@ class DomainsParser:
     def get_all_domains(self) -> [Domain]:
         page = self.session.get(self.BASE_URL, headers=self.headers, stream=True).content
         first_page_soup = BeautifulSoup(page, 'lxml')
+        print('1')
         sleep(randrange(6, 10))
         all_domains = self.get_page_domains(first_page_soup)
 
@@ -78,6 +79,7 @@ class DomainsParser:
             page = self.session.get(self.BASE_URL, params={'start': int(start)},
                                     headers=self.headers, stream=True).content
             sleep(randrange(5, 8))
+            print(start)
             soup = BeautifulSoup(page, 'lxml')
             all_domains.extend(self.get_page_domains(soup))
 
