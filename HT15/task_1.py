@@ -7,9 +7,9 @@
 """
 import csv
 from dataclasses import dataclass, fields, astuple
-
 from random import randrange
 from time import sleep
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -66,13 +66,11 @@ class DomainsParser:
 
     def get_page_domains(self, page_soup: BeautifulSoup) -> [Domain]:
         domains = page_soup.select('tbody tr')
-        print(len(domains))
         return [self.parser_single_domain(domain_soup) for domain_soup in domains]
 
     def get_all_domains(self) -> [Domain]:
         page = self.session.get(self.BASE_URL, headers=self.headers, stream=True).content
         first_page_soup = BeautifulSoup(page, 'lxml')
-        print('1')
         sleep(randrange(6, 10))
         all_domains = self.get_page_domains(first_page_soup)
 
@@ -81,7 +79,6 @@ class DomainsParser:
                                     headers=self.headers, stream=True).content
             sleep(randrange(5, 8))
             soup = BeautifulSoup(page, 'lxml')
-            print(start)
             all_domains.extend(self.get_page_domains(soup))
 
         return all_domains
