@@ -7,24 +7,27 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import Select
 
 from read_csv_order import data_order
 
 
 class RobotPlacer:
-    dir = f'{Path.cwd()}/output'
-    for f in os.listdir(dir):
-        os.remove(os.path.join(dir, f))
+    if not os.path.exists('output'):
+        os.makedirs('output')
+
+    output = f'{Path.cwd()}/output'
+    for f in os.listdir(output):
+        os.remove(os.path.join(output, f))
 
     url = 'https://robotsparebinindustries.com/'
 
     def __int__(self):
         self.driver = self.__init_driver()
 
-    def placer_order_robot(self, order):
+    def placer_order_robot(self, order: list):
         self.open_site()  # open site
         self.click_button('[class="nav-link"]')  # move Order your robot
 
@@ -49,10 +52,7 @@ class RobotPlacer:
     def fill_order(self, params: list):
         # head
         head_field = self._wait_for_element('[id="head"]')
-        head_field.click()
-        for _ in range(int(params[1])):
-            head_field.send_keys(Keys.ARROW_DOWN)
-        head_field.send_keys(Keys.ENTER)
+        Select(head_field).select_by_value(params[1])
         # body
         body_field = self._wait_for_element(f'[for="id-body-{params[2]}"]')
         body_field.click()
@@ -60,12 +60,10 @@ class RobotPlacer:
         legs_field = self._wait_for_element('[type="number"]')
         legs_field.click()
         legs_field.send_keys(params[3])
-        legs_field.send_keys(Keys.ENTER)
         # address
         address_field = self._wait_for_element('[type="text"]')
         address_field.click()
         address_field.send_keys(params[4])
-        address_field.send_keys(Keys.ENTER)
 
     def screenshot_preview(self, name):
         p = f'{Path.cwd()}/output'
@@ -130,4 +128,4 @@ class RobotPlacer:
 if __name__ == '__main__':
     with RobotPlacer() as placer:
 
-        placer.placer_order_robot(data_order)
+        placer.placer_order_robot(data_order())
